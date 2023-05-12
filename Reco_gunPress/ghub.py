@@ -1,4 +1,5 @@
 from ctypes import CDLL
+import time
 try:
     gm = CDLL(r'./ghub_device.dll')
     gmok = gm.device_open() == 1
@@ -42,4 +43,30 @@ def click_key(code):
 # 鼠标移动
 def mouse_xy(x, y, abs_move = False):
     if gmok:
-        gm.moveR(int(x), int(y), abs_move)
+        gm.moveR(int(0), int(y), abs_move)
+
+# 平滑鼠标移动
+def mouse_xy_smooth(x, y, time_all, time_start, abs_move=False):
+    if gmok:
+        step = 1 
+        if(y==0): y = 1
+        steps = int(y/step)
+        sleep_time = time_all/steps # 毫秒
+        for i in range(steps):
+            gm.moveR(1, step, abs_move)
+            while time.perf_counter()* 1000 - time_start < sleep_time: # 若还没到开火间隔时间，则等待
+                pass
+            time_start = time.perf_counter()* 1000  # 更新开始时间（以毫秒为单位）
+           
+
+
+if __name__=='__main__':
+    # mouse_xy(0,100)
+    # mouse_xy(100,0)
+    # mouse_xy(-100,-100)
+     gm.moveR(0, 100, False)
+                    
+   
+
+
+

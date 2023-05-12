@@ -146,12 +146,12 @@ def make_screenshot(x1, y1, x2,y2):
     im = ImageGrab.grab(bbox)
     return im
 
-#当前装备截图
-def equi_gun_screenshot():
-    im_1 = make_screenshot(1825, 125, 1905, 165)  # 一号枪截图区（此数据适用2K分辨率，其余分辨率或者其余游戏自行调整）
-    im_2 = make_screenshot(1825,431,1905,471)  # 二号枪截图区（此数据适用2K分辨率，其余分辨率或者其余游戏自行调整）
-    im_1.save('./picture/equiment/im_1.png' )
-    im_2.save('./picture/equiment/im_2.png' )
+# 一号位和二号位的武器图像处理
+def equi_gun_screenshot(img):
+    gun_1 = adaptive_binarization(np.array(img.crop((1825,125,1905,165)).convert('L'))) # 一号枪截图区（此数据适用2K分辨率，其余分辨率或者其余游戏自行调整）
+    gun_2 = adaptive_binarization(np.array(img.crop((1825, 431, 1905, 471)).convert('L')))  # 二号枪截图区（此数据适用2K分辨率，其余分辨率或者其余游戏自行调整）
+    cv2.imwrite('./picture/equiment/gun_1.png', gun_1)
+    cv2.imwrite('./picture/equiment/gun_2.png', gun_2)
 
 #当前姿势截图
 def posture_screenshot():
@@ -203,11 +203,9 @@ def bag_chickpoint_screenshot():
     # 1、2号装备截图对齐原则，适用2560*1440，横坐标不变，纵坐标加306
     img = ImageGrab.grab() #屏幕截图
     bag = img.crop((501,78,573,116)) #提取截屏背包检测点
-    im_1 = img.crop((1825, 125, 1905, 165)) #提取截屏武器1
-    im_2 = img.crop((1825,431,1905,471)) #提取截屏武器2
     bag.save('./picture/equiment/bag.png')
-    im_1.save('./picture/equiment/gun_1.png')
-    im_2.save('./picture/equiment/gun_2.png')
+
+    equi_gun_screenshot(img)
     mirror_screenchot(img)
     muzzle_screenchot(img)
     grip_screenchot(img)

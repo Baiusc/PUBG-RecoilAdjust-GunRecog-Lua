@@ -10,7 +10,7 @@ userInfo = {
 	-- Whether to output debugging information, the CPU calculation pressure can be reduced after close.
 	-- It is recommended to turn it on during debugging and turn it off after debugging.
 	-- (0 - Disable | 1 - Enable)
-	debug = 1,
+	debug = 0,
 
 	-- CPU 负载等级，建议输入 1 ~ 30 之间的数字，不能小于 1 。值越小，压枪效果越好，值越大，帧数越高。(过分掉帧会直接影响压枪效果，请在保证帧数的情况下减小该值)
 	-- CPU load level, It is recommended to enter a number between 1 and 30, cannot be less than 1.
@@ -55,7 +55,6 @@ userInfo = {
 			return false -- 判断条件，返回值为布尔型
 		end,
 	},
-
 	-- 支持的枪械，排列顺序即是配置顺序，可以自行调整。
 	-- 模式：0 - 不启用 | 1 - 启用 | 2 - 开启连点
 	-- 系数：枪械自身系数，基于 ADS 进行调整 (ADS为全局系数，此处为自身系数)
@@ -63,25 +62,25 @@ userInfo = {
 	canUse = {
 		[".45"] = {
 			-- 枪械             模式         系数        下蹲系数
-			{ "UMP45",          1,          1,          0.8 }, -- 基础镜 + 扩容，Bizon (基础镜即可)，Vector (补偿 + 基础镜 + 扩容) | Reddot + Mag，Bizon (Reddot)，Vector (Komp + Reddot + Mag)
-			{ "Tommy Gun",      1,          1,          0.8 }, -- 扩容 | Mag
+			{ "UMP45",          0,          1,          0.8 }, -- 基础镜 + 扩容，Bizon (基础镜即可)，Vector (补偿 + 基础镜 + 扩容) | Reddot + Mag，Bizon (Reddot)，Vector (Komp + Reddot + Mag)
+			{ "Tommy Gun",      0,          1,          0.8 }, -- 扩容 | Mag
 		},
 			-- 枪械             模式         系数        下蹲系数
 		["9mm"] = {
-			{ "Vector",         1,          1,          0.8 }, -- 基础镜 + 扩容 | Reddot + Mag
-			{ "Micro UZI",      1,          1,          0.8 }, -- 扩容 | Mag
+			{ "Vector",         0,          1,          0.8 }, -- 基础镜 + 扩容 | Reddot + Mag
+			{ "Micro UZI",      0,          1,          0.8 }, -- 扩容 | Mag
 		},
 		["5.56"] = {
 			-- 枪械             模式         系数        下蹲系数
 			{ "M416",           1,          1,          0.8 }, -- 补偿 + 基础镜 + 直角 + 枪托 + 扩容 | Komp + Reddot + Triangular grip + Gunstock + Mag
-			{ "SCAR-L",         1,          1,          0.8 }, -- 补偿 + 基础镜 + 直角 + 扩容 | Komp + Reddot + Triangular grip + Mag
-			{ "QBZ",            1,          1,          0.8 }, -- 补偿 + 基础镜 + 直角 + 扩容 | Komp + Reddot + Triangular grip + Mag
-			{ "G36C",           1,          1,          0.8 }, -- 补偿 + 基础镜 + 直角 + 扩容 | Komp + Reddot + Triangular grip + Mag
-			{ "M16A4",          2,          1,          0.8 }, -- 补偿 + 基础镜 + 枪托 + 扩容 | Komp + Reddot + Gunstock + Mag
+			{ "SCAR-L",         0,          1,          0.8 }, -- 补偿 + 基础镜 + 直角 + 扩容 | Komp + Reddot + Triangular grip + Mag
+			{ "QBZ",            0,          1,          0.8 }, -- 补偿 + 基础镜 + 直角 + 扩容 | Komp + Reddot + Triangular grip + Mag
+			{ "G36C",           0,          1,          0.8 }, -- 补偿 + 基础镜 + 直角 + 扩容 | Komp + Reddot + Triangular grip + Mag
+			{ "M16A4",          0,          1,          0.8 }, -- 补偿 + 基础镜 + 枪托 + 扩容 | Komp + Reddot + Gunstock + Mag
 		},
 		["7.62"] = {
 			-- 枪械             模式         系数        下蹲系数
-			{ "AKM",            1,          1,          0.8 }, -- 补偿 + 基础镜 + 扩容 | Komp + Reddot + Mag
+			{ "AKM",            0,          1,          0.8 }, -- 补偿 + 基础镜 + 扩容 | Komp + Reddot + Mag
 			{ "Beryl M762",     1,          1,          0.8 }, -- 补偿 + 基础镜 + 直角 + 扩容 | Komp + Reddot + Triangular grip + Mag
 			{ "DP-28",          0,          1,          0.8 }, -- 基础镜 | Reddot
 		},
@@ -93,11 +92,11 @@ userInfo = {
 	G_bind = {
 		-- G
 		["G3"] = "",
-		["G4"] = "",
-		["G5"] = "",
-		["G6"] = "5.56",
+		["G4"] = "5.56",
+		["G5"] = "7.62",
+		["G6"] = "",
 		["G7"] = "9mm",
-		["G8"] = "7.62",
+		["G8"] = "",
 		["G9"] = ".45",
 		["G10"] = "last",
 		["G11"] = "next",
