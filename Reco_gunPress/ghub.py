@@ -59,7 +59,6 @@ def mouse_xy_smooth(x, y, time_all, time_start, abs_move=False):
             time_start = time.perf_counter()* 1000  # 更新开始时间（以毫秒为单位）
            
 
-
 if __name__=='__main__':
     # mouse_xy(0,100)
     # mouse_xy(100,0)

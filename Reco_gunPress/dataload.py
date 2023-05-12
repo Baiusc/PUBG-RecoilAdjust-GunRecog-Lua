@@ -33,7 +33,14 @@ class Gun:
                     self.maxBullets = gun_data['maxBullets']
                     self.single = gun_data['single']
                     self.interval = gun_data['speed']
+
+                    # self.para_range = gun_data['ballistic']
                     self.para_range = gun_data['ballistic']
+
+                    if(self.name=='m762'):
+                        self.y = gun_data['y']
+                        self.d = gun_data['d']
+
                     self.posture_states.append(gun_data['posture']['squat'])
                     self.posture_states.append(gun_data['posture']['down'])
                     if mirror!= 'None' and mirror != '':

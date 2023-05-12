@@ -22,6 +22,7 @@ def start_mouse_listen(dict):    # 定义一个函数，用于监听鼠标事件
             pass # 不执行任何操作
         return True # 返回 True，表示继续监听鼠标事件
 
+    # 仅调试时用到
     def on_move(x, y):
         if dict['fire_signal']: 
             # 在开火时记录鼠标的位置

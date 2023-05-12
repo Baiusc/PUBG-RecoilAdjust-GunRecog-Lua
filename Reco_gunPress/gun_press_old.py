@@ -2,7 +2,7 @@ from ghub import *
 import time
 from recognize import *
 
-def fire(dict):
+def fire_old(dict):
     Guns = [] # 定义一个空列表 Guns
     while True: # 无限循环
         if dict['bag_signal']: # 检查字典中的 bag_signal 键是否为真
@@ -34,14 +34,9 @@ def fire(dict):
                         if i == gun.maxBullets or not dict['fire_signal']: # 检查 i 是否等于枪支对象的 maxBullets 属性或字典中的 fire_signal 键是否为假
                             break # 如果满足任一条件，则退出循环
 
-                        # mouse_xy_smooth(0, down, gun.interval, start_time) # 调用 mouse_xy 函数移动鼠标
+                        mouse_xy_smooth(0, down, gun.interval, start_time) # 调用 mouse_xy 函数移动鼠标
 
-                        mouse_xy(0, down) # 调用 mouse_xy 函数移动鼠标
-                        while time.perf_counter()* 1000 - time_start < sleep_time: # 若还没到开火间隔时间，则等待
-                            pass
-                        time_start = time.perf_counter()* 1000  # 更新开始时间（以毫秒为单位）
-                        
-                        
+                        # mouse_xy(0, down) # 调用 mouse_xy 函数移动鼠标
                         # elapsed = (round(time.perf_counter(), 3) * 1000 - start_time) # 计算经过的时间（以毫秒为单位）
                         # sleeptime = gun.interval - elapsed # 计算睡眠时间
                         # time.sleep(sleeptime/ 1000) # 睡眠指定时间
