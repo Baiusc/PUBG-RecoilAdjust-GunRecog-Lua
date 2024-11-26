@@ -37,9 +37,8 @@ class Gun:
                     # self.para_range = gun_data['ballistic']
                     self.para_range = gun_data['ballistic']
 
-                    if(self.name=='m762'):
-                        self.y = gun_data['y']
-                        self.d = gun_data['d']
+                    if(self.name=='M762'):
+                        self.m762_zl = gun_data['m762_zl']
 
                     self.posture_states.append(gun_data['posture']['squat'])
                     self.posture_states.append(gun_data['posture']['down'])

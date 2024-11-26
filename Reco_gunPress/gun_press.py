@@ -13,7 +13,7 @@ def fire(dict):
             if not bullet_check(): # 调用 bullet_check 函数检查子弹是否充足
                 continue # 如果子弹不足，则继续下一次循环   
 
-            start_time = time.perf_counter()* 1000 # 获取当前时间（以毫秒为单位）
+            time_start = time.perf_counter()* 1000 # 获取当前时间（以毫秒为单位）
 
             # start_time = round(time.perf_counter(), 3) * 1000 # 获取当前时间（以毫秒为单位）
 
@@ -27,9 +27,18 @@ def fire(dict):
                 i = 0 # 初始化一个变量i，用于后面计数使用
                 if gun.single == False:  # 如果该枪不是单发模式
                     while True: # 进入循环
+                        # time_start = time.perf_counter()* 1000  # 更新开始时间（以毫秒为单位）
+
                         posture_ratio = gun.posture_states[dict['posture']] # 根据字典中的 posture 键获取枪支对象的姿势状态，并计算出姿势比例
                         down = gun.para_range[i] * posture_ratio * gun.k # 根据枪支对象的 para_range 属性、姿势比例和 k 属性计算出下移量
-                        print('第{}发,压{}'.format( i+1, down))
+                        sleep_time = gun.interval
+                        
+                        if(gun.name=='M762'):
+                            down = gun.m762_zl[i]['y']
+                            sleep_time = gun.m762_zl[i]['d']
+                            # sleep_time = 2
+
+                        print('第{}次,压{},睡{}'.format( i+1, down,sleep_time))
                         i += 1 # 将 i 变量加 1
                         if i == gun.maxBullets or not dict['fire_signal']: # 检查 i 是否等于枪支对象的 maxBullets 属性或字典中的 fire_signal 键是否为假
                             break # 如果满足任一条件，则退出循环
@@ -39,8 +48,8 @@ def fire(dict):
                         mouse_xy(0, down) # 调用 mouse_xy 函数移动鼠标
                         while time.perf_counter()* 1000 - time_start < sleep_time: # 若还没到开火间隔时间，则等待
                             pass
-                        time_start = time.perf_counter()* 1000  # 更新开始时间（以毫秒为单位）
-                        
+
+                        time_start = time.perf_counter()* 1000 # 获取当前时间（以毫秒为单位）
                         
                         # elapsed = (round(time.perf_counter(), 3) * 1000 - start_time) # 计算经过的时间（以毫秒为单位）
                         # sleeptime = gun.interval - elapsed # 计算睡眠时间
