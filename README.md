@@ -98,10 +98,6 @@ In pubg , automatic recognition of gun and accessories,  gun pressure (recoil co
    {41, 67},
       {42, 68},
 ```
-我需要将m762_zl = {{x=0, y=3, d=2}, {x=0, y=2, d=2}}这样的数据转换为      "m762_zl": [
-        {"x": 0, "y": 3, "d": 2},
-        {"x": 0, "y": 2, "d": 2}],这样的json格式。请你帮我写一个python函数，来完成此需求
-
 
 m762站姿裸配精调弹道表
 ```lua
