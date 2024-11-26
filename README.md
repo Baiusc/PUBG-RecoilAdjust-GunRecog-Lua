@@ -1,13 +1,3 @@
-<!--
- * @Author       : bzs_own_pc 1148635540@qq.com
- * @Date         : 2024-11-26 20:31:12
- * @LastEditors  : bzs_own_pc 1148635540@qq.com
- * @LastEditTime : 2024-11-26 20:35:15
- * @FilePath     : \PUBG_gunRecognition_recoilControl\README.md
- * @Description  : 
- * 
- * Copyright (c) 2024 by vitalchem, All Rights Reserved. 
--->
 # PUBG-RecoilAdjust-GunRecog-Lua
 # 参考项目
 
