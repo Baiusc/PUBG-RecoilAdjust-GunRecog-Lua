@@ -1,75 +1,103 @@
-from ghub import *
+# 导入所需的库
+from ghub import * # 假设 ghub 库包含了鼠标操作函数
 import time
-from recognize import *
+from recognize import * # 假设 recognize 库包含了识别函数
 
-def fire(dict):
-    Guns = [] # 定义一个空列表 Guns
-    while True: # 无限循环
-        if dict['bag_signal']: # 检查字典中的 bag_signal 键是否为真
-            if is_bag_open(): # 调用 is_bag_open 函数检查背包是否打开
-                Guns = recognize_equiment() # 调用 recognize_equiment 函数识别装备，并将结果存储在 Guns 列表中
-            dict['bag_signal'] = False # 将字典中的 bag_signal 键设置为假
-        if dict['fire_signal']: # 检查字典中的 fire_signal 键是否为真  
-            if not bullet_check(): # 调用 bullet_check 函数检查子弹是否充足
-                continue # 如果子弹不足，则继续下一次循环   
+def fire(shared_data):
+    """
+    负责处理游戏中的开火和压枪逻辑。
+    该函数在一个无限循环中运行，根据共享字典中的信号执行相应操作。
+    """
+    guns = []  # 存储识别到的枪械信息，Gun 对象列表
+    
+    while True:
+        # --- 1. 背包和装备识别逻辑 ---
+        # 检查是否需要识别装备（通过键盘按下Tab键触发）
+        if shared_data['bag_signal']:
+            # 只有当背包真正打开时才进行识别，防止误操作
+            if is_bag_open():
+                # 调用 recognize_equipment 函数识别装备，并将结果存储在 guns 列表中
+                guns = recognize_equiment()
+            # 识别完成后，重置背包信号，等待下一次触发
+            shared_data['bag_signal'] = False
 
-            time_start = time.perf_counter()* 1000 # 获取当前时间（以毫秒为单位）
+        # --- 2. 开火和压枪逻辑 ---
+        # 检查开火信号（通过鼠标左键按下触发）
+        if shared_data['fire_signal']:
+            # 检查当前弹匣是否有子弹
+            if not bullet_check():
+                continue  # 如果没有子弹，跳过本次循环，不执行压枪
 
-            # start_time = round(time.perf_counter(), 3) * 1000 # 获取当前时间（以毫秒为单位）
+            # 获取当前开火状态（姿势、开火模式等）
+            firestate_struct = get_firestate()
+            shared_data['posture'] = firestate_struct.posture
+            shared_data['firemode'] = firestate_struct.firetype
 
-            firestate_struct = get_firestate() # 调用 get_firestate 函数获取开火状态
-            dict['posture'] = firestate_struct.posture # 将开火状态中的姿势存储在字典的 posture 键中
-            dict['firemode'] = firestate_struct.firetype # 将开火状态中的开火类型存储在字典的 firemode 键中
-            if len(Guns) > dict['switch']: # 检查 Guns 列表的长度是否大于字典中的 switch 键
-                gun = Guns[dict['switch']] # 获取列表中对应索引的枪支对象
-                if gun.name == 'None': # 检查枪支对象的名称是否为 'None'
-                    continue # 如果名称为 'None'，则继续下一次循环
-                i = 0 # 初始化一个变量i，用于后面计数使用
-                if gun.single == False:  # 如果该枪不是单发模式
-                    while True: # 进入循环
-                        # time_start = time.perf_counter()* 1000  # 更新开始时间（以毫秒为单位）
+            # 确保 guns 列表不为空，且当前切换的武器索引有效
+            current_gun_index = shared_data['switch']
+            if len(guns) > current_gun_index:
+                gun = guns[current_gun_index]
+                
+                # 如果当前武器是“空”，则不执行压枪
+                if gun.name == 'None':
+                    continue
 
-                        posture_ratio = gun.posture_states[dict['posture']] # 根据字典中的 posture 键获取枪支对象的姿势状态，并计算出姿势比例
-                        down = gun.para_range[i] * posture_ratio * gun.k # 根据枪支对象的 para_range 属性、姿势比例和 k 属性计算出下移量
-                        sleep_time = gun.interval
+                i = 0  # 计数器，记录已发射的子弹数
+                start_time = time.perf_counter() * 1000  # 记录开火开始时间（毫秒）
+
+                # 根据枪械类型执行不同的压枪逻辑
+                if not gun.single:  # 全自动/连发枪械压枪
+                    while True:
+                        # 根据姿势获取压枪比例
+                        posture_ratio = gun.posture_states[shared_data['posture']]
                         
-                        if(gun.name=='M762'):
-                            down = gun.m762_zl[i]['y']
-                            sleep_time = gun.m762_zl[i]['d']
-                            # sleep_time = 2
-
-                        print('第{}次,压{},睡{}'.format( i+1, down,sleep_time))
-                        i += 1 # 将 i 变量加 1
-                        if i == gun.maxBullets or not dict['fire_signal']: # 检查 i 是否等于枪支对象的 maxBullets 属性或字典中的 fire_signal 键是否为假
-                            break # 如果满足任一条件，则退出循环
-
-                        # mouse_xy_smooth(0, down, gun.interval, start_time) # 调用 mouse_xy 函数移动鼠标
-
-                        mouse_xy(0, down) # 调用 mouse_xy 函数移动鼠标
-                        while time.perf_counter()* 1000 - time_start < sleep_time: # 若还没到开火间隔时间，则等待
-                            pass
-
-                        time_start = time.perf_counter()* 1000 # 获取当前时间（以毫秒为单位）
+                        # 计算当前子弹的下移量
+                        down = gun.para_range[i] * posture_ratio * gun.k
                         
-                        # elapsed = (round(time.perf_counter(), 3) * 1000 - start_time) # 计算经过的时间（以毫秒为单位）
-                        # sleeptime = gun.interval - elapsed # 计算睡眠时间
-                        # time.sleep(sleeptime/ 1000) # 睡眠指定时间
-                        # start_time = round(time.perf_counter(), 3) * 1000 # 获取当前时间（以毫秒为单位）
+                        i += 1
                         
-                else: # 连狙压枪 如果该枪是单发模式
-                    while True: # 进入循环
-                        posture_ratio = gun.posture_states[dict['posture']] # 根据字典中的 posture 键获取枪支对象的姿势状态，并计算出姿势比例
-                        down = gun.para_range[i] * posture_ratio * gun.k # 根据枪支对象的 para_range 属性、姿势比例和 k 属性计算出下移量
-                        i += 1 # 将 i 变量加 1
-                        if i == gun.maxBullets or dict['singlebullet'] < 1: # 检查 i 是否等于枪支对象的 maxBullets 属性或字典中的 singlebullet 键是否小于 1
-                            dict['singlebullet'] = 0 # 将字典中的 singlebullet 键设置为 0
-                            break # 退出循环
+                        # 检查是否达到最大子弹数或开火信号已停止
+                        if i >= gun.maxBullets or not shared_data['fire_signal']:
+                            break
+                        
+                        # 移动鼠标进行压枪
+                        mouse_xy(0, down)
+                        
+                        # 精确控制开火间隔时间
+                        elapsed_time = (time.perf_counter() * 1000 - start_time)
+                        sleep_time = gun.interval - elapsed_time
+                        if sleep_time > 0:
+                            time.sleep(sleep_time / 1000)
+                        
+                        # 更新开始时间为下一次压枪的基准时间
+                        start_time = time.perf_counter() * 1000
 
-                        # mouse_xy_smooth(0, down, gun.interval, start_time) # 调用 mouse_xy 函数移动鼠标
-
-                        mouse_xy(0, down) # 调用 mouse_xy 函数移动鼠标
-                        elapsed = (round(time.perf_counter(), 3) * 1000 - start_time) # 计算经过的时间（以毫秒为单位）
-                        sleeptime = gun.interval - elapsed # 计算睡眠时间
-                        time.sleep(sleeptime / 1000) # 睡眠指定时间
-                        click_mouse_button(1) # 调用 click_mouse_button 函数点击鼠标按钮
-                        start_time = round(time.perf_counter(), 3) * 1000 # 获取当前时间（以毫秒为单位）
+                else:  # 单发/连狙压枪
+                    while True:
+                        # 根据姿势获取压枪比例
+                        posture_ratio = gun.posture_states[shared_data['posture']]
+                        
+                        # 计算当前子弹的下移量
+                        down = gun.para_range[i] * posture_ratio * gun.k
+                        
+                        i += 1
+                        
+                        # 检查是否达到最大子弹数或单发开火信号已停止
+                        if i >= gun.maxBullets or shared_data['singlebullet'] < 1:
+                            shared_data['singlebullet'] = 0  # 重置单发计数器
+                            break
+                            
+                        # 移动鼠标进行压枪
+                        mouse_xy(0, down)
+                        
+                        # 计算需要等待的时间
+                        elapsed_time = (time.perf_counter() * 1000 - start_time)
+                        sleep_time = gun.interval - elapsed_time
+                        if sleep_time > 0:
+                            time.sleep(sleep_time / 1000)
+                        
+                        # 模拟鼠标点击（连狙模式下）
+                        click_mouse_button(1)
+                        
+                        # 更新开始时间为下一次点击的基准时间
+                        start_time = time.perf_counter() * 1000
