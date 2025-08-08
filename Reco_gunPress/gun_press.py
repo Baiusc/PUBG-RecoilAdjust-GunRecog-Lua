@@ -17,7 +17,7 @@ def fire(shared_data):
             # 只有当背包真正打开时才进行识别，防止误操作
             if is_bag_open():
                 # 调用 recognize_equipment 函数识别装备，并将结果存储在 guns 列表中
-                guns = recognize_equiment()
+                guns = recognize_equipment()
             # 识别完成后，重置背包信号，等待下一次触发
             shared_data['bag_signal'] = False
 
@@ -29,7 +29,7 @@ def fire(shared_data):
                 continue  # 如果没有子弹，跳过本次循环，不执行压枪
 
             # 获取当前开火状态（姿势、开火模式等）
-            firestate_struct = get_firestate()
+            firestate_struct = get_fire_state()
             shared_data['posture'] = firestate_struct.posture
             shared_data['firemode'] = firestate_struct.firetype
 

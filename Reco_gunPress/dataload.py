@@ -57,9 +57,9 @@ class Gun:
                     self.interval = gun_data['speed']
                     self.para_range = gun_data['ballistic']
                     
-                    # 特殊处理M762，因为它可能有独特的压枪数据
-                    if self.name == 'M762':
-                        self.m762_zl = gun_data['m762_zl']
+                    # # 特殊处理 M762，仅 debug 用
+                    # if self.name == 'M762':
+                    #     self.m762_zl = gun_data['m762_zl']
 
                     # 加载不同姿势下的压枪系数
                     self.posture_states.append(gun_data['posture']['squat'])
